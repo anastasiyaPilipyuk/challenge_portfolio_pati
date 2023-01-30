@@ -1,14 +1,55 @@
+import os
+
+from selenium.webdriver.chrome.service import Service
+
+from selenium import webdriver
+
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver
 
+from utils.settings import DRIVER_PATH, IMPLICITLY_WAIT
 
-class BasePage():
 
-    def __init__(self, driver: WebDriver):
-        self.driver = driver
+class BasePage:
+    page_title = ""
+    page_url = "https://scouts-test.futbolkolektyw.pl/"
+    shared_driver = None
+
+    @classmethod
+    def set_up(cls):
+        if BasePage.shared_driver is None:
+            os.chmod(DRIVER_PATH, 755)
+            BasePage.shared_driver_service = Service(executable_path=DRIVER_PATH)
+            BasePage.shared_driver = webdriver.Chrome(service=BasePage.shared_driver_service)
+            BasePage.shared_driver.get(cls.page_url)
+            BasePage.shared_driver.fullscreen_window()
+            BasePage.shared_driver.implicitly_wait(IMPLICITLY_WAIT)
+        return BasePage.shared_driver
+
+    @classmethod
+    def tear_down(cls):
+        BasePage.shared_driver.quit()
+
+    def __init__(self):
+        self.driver = self.set_up()
 
     def field_send_keys(self, selector, value, locator_type=By.XPATH):
         return self.driver.find_element(locator_type, selector).send_keys(value)
 
     def click_on_the_element(self, selector, selector_type=By.XPATH):
         return self.driver.find_element(selector_type, selector).click()
+
+    def get_title_from_page(self, url=page_url):
+        self.driver.get(url)
+        return self.driver.title
+
+    def assert_element_text(self, xpath, expected_text):
+        """Comparing expected text with observed value from web element
+
+           :param xpath: xpath to element with text to be observed
+           :param expected_text: text what we expecting to be found
+           :return: None
+       """
+        element = self.driver.find_element(by=By.XPATH, value=xpath)
+        element_text = element.text
+        assert expected_text == element_text
