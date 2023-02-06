@@ -1,19 +1,21 @@
 import os
+import time
 
-from selenium.webdriver.chrome.service import Service
-
+from selenium.webdriver.support import expected_conditions as EC
 from selenium import webdriver
-
+from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
-from selenium.webdriver.remote.webdriver import WebDriver
+from selenium.webdriver.support.wait import WebDriverWait
 
-from utils.settings import DRIVER_PATH, IMPLICITLY_WAIT
+from utils.settings import DRIVER_PATH, IMPLICITLY_WAIT, DEFAULT_LOCATOR_TYPE
 
 
 class BasePage:
     page_title = ""
     page_url = "https://scouts-test.futbolkolektyw.pl/"
     shared_driver = None
+
+    required_mark_xpath = "//*[text()='Required']"
 
     @classmethod
     def set_up(cls):
@@ -29,6 +31,7 @@ class BasePage:
     @classmethod
     def tear_down(cls):
         BasePage.shared_driver.quit()
+        BasePage.shared_driver = None
 
     def __init__(self):
         self.driver = self.set_up()
@@ -53,3 +56,33 @@ class BasePage:
         element = self.driver.find_element(by=By.XPATH, value=xpath)
         element_text = element.text
         assert expected_text == element_text
+
+    def wait_for_element_to_be_clickable(self, locator, locator_type=DEFAULT_LOCATOR_TYPE):
+        wait = WebDriverWait(self.driver, 10)
+        element = wait.until(EC.element_to_be_clickable((locator_type, locator)))
+        time.sleep(1)
+
+    def wait_for_text_to_be_present_in_element(self, locator, text, locator_type=DEFAULT_LOCATOR_TYPE):
+        wait = WebDriverWait(self.driver, 10)
+        wait.until(EC.text_to_be_present_in_element((locator_type, locator), text))
+        time.sleep(1)
+
+    def visibility_of_element_located(self, locator, locator_type=DEFAULT_LOCATOR_TYPE):
+        wait = WebDriverWait(self.driver, 10)
+        wait.until(EC.visibility_of_element_located((locator_type, locator)))
+        time.sleep(1)
+
+    def is_element_exist(self, selector, locator_type=DEFAULT_LOCATOR_TYPE):
+        element = self.driver.find_element(locator_type, selector)
+        if element is None:
+            return False
+        return True
+
+    def get_element_text_or_empty_str(self, selector, locator_type=DEFAULT_LOCATOR_TYPE):
+        element = self.driver.find_element(locator_type, selector)
+        if element is None:
+            return ''
+        return element.text
+
+    def save_screenshot(self, file_name):
+        self.driver.save_screenshot(file_name)

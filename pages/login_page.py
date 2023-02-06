@@ -8,6 +8,10 @@ class LoginPage(BasePage):
     login_field_xpath = "//*[@id='login']"
     password_field_xpath = "//*[@id='password']"
     sign_in_button_xpath = "//button[@type='submit']"
+    error_xpath = "//div[3]/span"
+    empty_login_error_text_en = "Please provide your username or your e-mail."
+    empty_password_error_text_en = "Please provide your password."
+    incorrect_data_error_text_en = "Identifier or password invalid."
 
     def type_in_email(self, email):
         self.field_send_keys(self.login_field_xpath, email)
