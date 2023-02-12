@@ -16,12 +16,12 @@ class Dashboard(BasePage):
     events_count_value_xpath = "(//main//b)[4]"
 
     dev_team_contact_link_xpath = "//span[text()='Dev team contact']/parent::a"
-    add_player_button_xpath = "//div[@class='MuiCardContent-root'])[2]/a/button"
-    last_created_player_link_xpath = "//div[@class='MuiCardContent-root'])[3]/a[1]"
-    last_updated_player_link_xpath = "//div[@class='MuiCardContent-root'])[3]/a[2]"
-    last_created_match_link_xpath = "//div[@class='MuiCardContent-root'])[3]/a[3]"
-    last_updated_match_link_xpath = "//div[@class='MuiCardContent-root'])[3]/a[4]"
-    last_updated_report_link_xpath = "//div[@class='MuiCardContent-root'])[3]/a[5]"
+    add_player_button_xpath = "(//div[@class='MuiCardContent-root'])[2]/a/button"
+    last_created_player_link_xpath = "(//div[@class='MuiCardContent-root'])[3]/a[1]"
+    last_updated_player_link_xpath = "(//div[@class='MuiCardContent-root'])[3]/a[2]"
+    last_created_match_link_xpath = "(//div[@class='MuiCardContent-root'])[3]/a[3]"
+    last_updated_match_link_xpath = "(//div[@class='MuiCardContent-root'])[3]/a[4]"
+    last_updated_report_link_xpath = "(//div[@class='MuiCardContent-root'])[3]/a[5]"
 
     def is_right_title(self):
         self.wait_for_element_to_be_clickable(self.add_player_button_xpath)
