@@ -3,21 +3,21 @@ import unittest
 
 from pages.base_page import BasePage
 from pages.dashboard import Dashboard
-from pages.login_page import LoginPage
 from pages.add_player_page import AddPlayerPage
 from test_cases.login_to_the_system import TestLoginPage
 
 
 class TestAddPlayerPage(unittest.TestCase):
     def setUp(self):
-        TestLoginPage.test_login_to_the_system(self)
+        TestLoginPage.login_to_the_system()
         dashboard_page = Dashboard()
         dashboard_page.click_add_player_button()
         add_player_page = AddPlayerPage()
         add_player_page.is_right_title(add_player_page.add_player_page_title)
 
     @staticmethod
-    def fillPlayer(add_player_page, player_dictionary):
+    def fillPlayer(add_player_page, player_dictionary, file_name):
+        BasePage.file_name = file_name
         if "email" in player_dictionary.keys():
             add_player_page.type_in_email(player_dictionary["email"])
         if "name" in player_dictionary.keys():
@@ -80,14 +80,10 @@ class TestAddPlayerPage(unittest.TestCase):
                                }
 
         add_player_page = AddPlayerPage()
-        self.fillPlayer(add_player_page, new_player_max_info)
-
+        self.fillPlayer(add_player_page, new_player_max_info, "d:\ScreenShots\TC_PP_01.png")
         add_player_page.click_submit_button()
-
         add_player_page.wait_for_save_be_complete(new_player_max_info)
         add_player_page.is_sub_menu_player_exist()
-
-        add_player_page.save_screenshot("d:\ScreenShots\TC_PP_01.png")
 
     def test_add_player_with_min_info(self):
         new_player_min_info = {"name": "PlayerMin01Name",
@@ -97,10 +93,9 @@ class TestAddPlayerPage(unittest.TestCase):
                                }
 
         add_player_page = AddPlayerPage()
-        self.fillPlayer(add_player_page, new_player_min_info)
+        self.fillPlayer(add_player_page, new_player_min_info, "d:\ScreenShots\TC_PP_02.png")
         add_player_page.click_submit_button()
         add_player_page.wait_for_save_be_complete(new_player_min_info)
-        add_player_page.save_screenshot("d:\ScreenShots\TC_PP_02.png")
 
     def test_add_player_no_all_required_info(self):
         player_info = {"name": "PlayerNoSave01Name",
@@ -108,14 +103,14 @@ class TestAddPlayerPage(unittest.TestCase):
                        }
 
         add_player_page = AddPlayerPage()
-        self.fillPlayer(add_player_page, player_info)
+        self.fillPlayer(add_player_page, player_info, "d:\ScreenShots\TC_PP_03.png")
         add_player_page.click_submit_button()
         add_player_page.click_submit_button()
         add_player_page.required_sign_appear()
         add_player_page.is_right_title(add_player_page.add_player_page_title)
-        add_player_page.save_screenshot("d:\ScreenShots\TC_PP_03.png")
 
     @classmethod
     def tearDown(cls):
+        BasePage.shared_driver.save_screenshot(BasePage.file_name)
         time.sleep(3)
         BasePage.tear_down()

@@ -4,7 +4,7 @@ from pages.base_page import BasePage
 
 class Dashboard(BasePage):
     page_title = "Scouts panel"
-
+    # page_title = "PANEL SKAUTINGOWY"
     main_page_menu_xpath = "//div[@role='presentation']/ul[1]/div[1]"
     players_menu_xpath = "//div[@role='presentation']/ul[1]/div[2]"
     language_menu_xpath = "//div[@role='presentation']/ul[2]/div[1]"
@@ -28,6 +28,7 @@ class Dashboard(BasePage):
         assert self.get_title_from_page(self.page_url) == self.page_title
 
     def click_add_player_button(self):
+        self.wait_for_element_to_be_clickable(self.add_player_button_xpath)
         self.click_on_the_element(self.add_player_button_xpath)
 
     # Xpath for english version of site

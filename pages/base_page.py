@@ -12,10 +12,12 @@ from utils.settings import DRIVER_PATH, IMPLICITLY_WAIT, DEFAULT_LOCATOR_TYPE
 
 class BasePage:
     page_title = ""
-    page_url = "https://scouts-test.futbolkolektyw.pl/"
+    page_url = "https://scouts.futbolkolektyw.pl/en/"
+    # page_url = "https://scouts-test.futbolkolektyw.pl/"
     shared_driver = None
 
     required_mark_xpath = "//*[text()='Required']"
+    file_name = "d:\ScreenShots\TC_LP_01.png"
 
     @classmethod
     def set_up(cls):
@@ -30,8 +32,9 @@ class BasePage:
 
     @classmethod
     def tear_down(cls):
-        BasePage.shared_driver.quit()
-        BasePage.shared_driver = None
+        if BasePage.shared_driver is not None:
+            BasePage.shared_driver.quit()
+            BasePage.shared_driver = None
 
     def __init__(self):
         self.driver = self.set_up()
@@ -84,5 +87,5 @@ class BasePage:
             return ''
         return element.text
 
-    def save_screenshot(self, file_name):
-        self.driver.save_screenshot(file_name)
+#    def save_screenshot_(self, file_name):
+#       self.driver.save_screenshot(file_name)

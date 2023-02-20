@@ -7,7 +7,7 @@ class LoginPage(BasePage):
     header_xpath = "//h5"
     login_field_xpath = "//*[@id='login']"
     password_field_xpath = "//*[@id='password']"
-    sign_in_button_xpath = "//button[@type='submit']"
+    sign_in_button_xpath = "//button[@type='submit']/span"
     error_xpath = "//div[3]/span"
     empty_login_error_text_en = "Please provide your username or your e-mail."
     empty_password_error_text_en = "Please provide your password."
